@@ -77,7 +77,7 @@ const ProductCard = ({ product }) => {
                   navigate(`/product/${product.id}`);
                 }}
               >
-                Details
+                View Details
               </Button>
             </Box>
           </Box>
