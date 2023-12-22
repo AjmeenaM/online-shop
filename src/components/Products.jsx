@@ -1,26 +1,23 @@
 import { Button, Grid, Skeleton, Typography, Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import axios from "axios";
 import { useSelector } from "react-redux";
+import useFetchApi from "../hooks/useFetchApi";
 
-const Cards = ({ setCart }) => {
+const Products = () => {
   const { filters } = useSelector((state) => state);
   const [allProducts, setAllProducts] = useState([]);
-  const [status, setStatus] = useState("");
-  const fetchAllProducts = async () => {
-    setStatus("loading");
-    try {
-      let res = await axios.get("https://fakestoreapi.com/products");
-      setAllProducts(res.data);
-      setStatus("success");
-    } catch (err) {
-      setStatus("error");
-      console.log(err);
-    }
-  };
+  const { execute, response, status } = useFetchApi(
+    "https://fakestoreapi.com/products"
+  );
   useEffect(() => {
-    fetchAllProducts();
+    if (response) {
+      setAllProducts(response);
+    }
+  }, [response]);
+
+  useEffect(() => {
+    execute();
   }, []);
 
   const filteredProducts = allProducts.filter((product) => {
@@ -44,7 +41,7 @@ const Cards = ({ setCart }) => {
           <Typography textAlign={"center"} color={"red"} variant="h5">
             Error Occured!
           </Typography>
-          <Button onClick={fetchAllProducts}>Reload</Button>
+          <Button onClick={execute}>Reload</Button>
         </Box>
       )}
       <Grid container spacing={4}>
@@ -57,7 +54,7 @@ const Cards = ({ setCart }) => {
         {status === "success" &&
           filteredProducts.map((product) => (
             <Grid key={product.id} item xl={3} lg={3} md={4} sm={6} xs={12}>
-              <ProductCard setCart={setCart} product={product} />
+              <ProductCard product={product} />
             </Grid>
           ))}
       </Grid>
@@ -65,4 +62,4 @@ const Cards = ({ setCart }) => {
   );
 };
 
-export default Cards;
+export default Products;

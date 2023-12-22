@@ -1,7 +1,9 @@
-import { Box, Button, Card, Paper, Rating, Typography } from "@mui/material";
+import { Box, Button, Card, Rating, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const ProductCard = ({ product, setCart }) => {
+const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
   const { rating } = product;
   return (
     <Card
@@ -28,7 +30,7 @@ const ProductCard = ({ product, setCart }) => {
               backgroundSize: "contain",
               backgroundRepeat: "no-repeat",
             }}
-          ></div>
+          />
         </Box>
         <Box paddingX={1}>
           <Box marginBottom={1} display={"flex"} justifyContent={"flex-end"}>
@@ -71,9 +73,11 @@ const ProductCard = ({ product, setCart }) => {
               <Button
                 color={"success"}
                 size={"small"}
-                onClick={() => setCart(true)}
+                onClick={() => {
+                  navigate(`/product/${product.id}`);
+                }}
               >
-                Add to cart
+                Details
               </Button>
             </Box>
           </Box>

@@ -1,7 +1,7 @@
 /** @format */
 
 // **  Initial State
-const initialState = null;
+const initialState = [];
 
 const filters = (state = initialState, action) => {
   switch (action.type) {

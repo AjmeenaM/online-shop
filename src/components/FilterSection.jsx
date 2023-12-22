@@ -1,28 +1,29 @@
-import { Box, Button, Skeleton, TextField } from "@mui/material";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { Box, Button, Skeleton } from "@mui/material";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterAction } from "../redux/actions/filters";
+import useFetchApi from "../hooks/useFetchApi";
 
 const FilterSection = () => {
   const { filters } = useSelector((state) => state);
   const dispatch = useDispatch();
-  const fetchAllCategories = async () => {
-    try {
-      let res = await axios.get("https://fakestoreapi.com/products/categories");
-      let constructedData = res.data.map((cat) => ({
+  const { execute, response, status } = useFetchApi(
+    "https://fakestoreapi.com/products/categories"
+  );
+  useEffect(() => {
+    if (response) {
+      let constructedData = response.map((cat) => ({
         name: cat,
         id: cat,
         active: false,
       }));
       dispatch(setFilterAction([...constructedData]));
-    } catch (err) {
-      dispatch(setFilterAction([]));
     }
-  };
+  }, [response]);
+
   useEffect(() => {
-    if (!filters) {
-      fetchAllCategories();
+    if (!filters.length) {
+      execute();
     }
   }, []);
 
@@ -61,9 +62,11 @@ const FilterSection = () => {
     >
       <Box flexGrow={1}>
         <Box display={"flex"} justifyContent={"end"}>
-          {filters ? (
+          {status === "loading" ? (
+            <Skeleton variant="rectangular" height={35} width={500} />
+          ) : (
             <>
-              {filters.map((cat, index) => (
+              {filters.map((cat) => (
                 <Box key={cat.id} marginRight={2}>
                   <Button
                     variant={cat.active ? "contained" : "outlined"}
@@ -75,12 +78,10 @@ const FilterSection = () => {
               ))}
               <Box>
                 <Button variant={"outlined"} onClick={removeFilter}>
-                  All
+                  Clear all
                 </Button>
               </Box>
             </>
-          ) : (
-            <Skeleton variant="rectangular" height={35} width={500} />
           )}
         </Box>
       </Box>

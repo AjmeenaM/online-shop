@@ -1,10 +1,10 @@
 import React from "react";
-import Banner from "./Banner";
-import FilterSection from "./FilterSection";
-import Cards from "./Cards";
-import { Box, Container, Grid } from "@mui/material";
+import Banner from "../components/Banner";
+import FilterSection from "../components/FilterSection";
+import Products from "../components/Products";
+import { Box, Container } from "@mui/material";
 
-const index = ({ setCart }) => {
+const Home = () => {
   return (
     <Container>
       <Box paddingY={8}>
@@ -15,11 +15,11 @@ const index = ({ setCart }) => {
           <FilterSection />
         </Box>
         <Box>
-          <Cards setCart={setCart} />
+          <Products />
         </Box>
       </Box>
     </Container>
   );
 };
 
-export default index;
+export default Home;
